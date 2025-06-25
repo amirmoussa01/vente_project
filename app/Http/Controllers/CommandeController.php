@@ -58,4 +58,21 @@ class CommandeController extends Controller
             return response()->json(['error' => $e->getMessage()], 400);
         }
     }
+
+    public function edit(Commande $commande)
+{
+    return view('commandes.edit', compact('commande'));
+}
+
+public function update(Request $request, Commande $commande)
+{
+    $request->validate([
+        'statut' => 'required|string|in:en attente,en cours,expédiée,livrée,annulée',
+    ]);
+
+    $commande->update(['statut' => $request->statut]);
+
+    return redirect()->route('commandes.index')->with('success', 'Commande mise à jour.');
+}
+
 }
