@@ -16,7 +16,6 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained('users');
             $table->string('statut')->default('en attente');
             $table->decimal('total', 10, 2);
-            $table->dateTime('date_commande');
             $table->timestamps();
         });
     }

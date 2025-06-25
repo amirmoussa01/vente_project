@@ -11,9 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('roles', function (Blueprint $table) {
+        Schema::create('produits_panier', function (Blueprint $table) {
             $table->id();
-            $table->string('nom');
+            $table->foreignId('panier_id')->constrained('paniers')->ondelete('cascade');
+            $table->foreignId('produit_id')->constrained('produits');
+            $table->integer('quantite');
             $table->timestamps();
         });
     }
@@ -23,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('roles');
+        Schema::dropIfExists('produits_panier');
     }
 };
