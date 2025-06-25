@@ -14,10 +14,10 @@ return new class extends Migration
         Schema::create('paiements', function (Blueprint $table) {
             $table->id();
             $table->foreignId('commande_id')->constrained('commandes');
-            $table->decimal('numero',10);
-            $table->string('adresse');
+            $table->decimal('montant', 10 , 2);
             $table->string('statut');
             $table->dateTime('date_paiement');
+            $table->string('transaction_id');
             $table->timestamps();
         });
     }
