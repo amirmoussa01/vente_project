@@ -19,11 +19,12 @@
                                     {{ $categorie->nom }}
                                 </option>
                             @endforeach
-                        </select>
+                        </select><br>
                         <label for="tri">Trier par</label>
-                        <select class="form-control " name="tri" value="{{ request('tri') }}">
-                        <option>Prix croissant</option>
-                        <option >Prix décroissant</option>
+                        <select class="form-control" name="tri">
+                            <option value="">-- Sélectionner --</option>
+                            <option value="prix_asc" {{ request('tri') == 'prix_asc' ? 'selected' : '' }}>Prix croissant</option>
+                            <option value="prix_desc" {{ request('tri') == 'prix_desc' ? 'selected' : '' }}>Prix décroissant</option>
                         </select>
                     </div>
 
@@ -50,9 +51,7 @@
                         <div>
                             <h5 class="card-title">{{ $produit->nom }}</h5>
                             <p class="card-text">Prix : {{ $produit->prix }} F</p>
-                            @foreach($categories as $categorie)
-                                <p class="card-text">Catégorie : {{ $categorie->nom }}</p>
-                            @endforeach
+                                <p class="card-text">Catégorie : {{ optional($produit->categorie)->nom ?? 'Non définie' }}</p>
                         </div>
                         <div class="mt-3 d-flex justify-content-between">
                             <a href="{{ route('pages.produits.edit', $produit->id) }}" class="btn btn-warning btn-sm">Modifier</a>

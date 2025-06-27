@@ -56,8 +56,8 @@ Route::get('/produits/create', [ProduitController::class, 'create'])->name('page
 Route::post('/produits', [ProduitController::class, 'store'])->name('pages.produits.store');
 Route::get('/produits/{id}', [ProduitController::class, 'show'])->name('pages.produits.show');
 Route::get('/produits/{produit}/edit', [ProduitController::class, 'edit'])->name('pages.produits.edit');
-Route::put('/produits/{id}', [ProduitController::class, 'update'])->name('pages.produits.update');
-Route::delete('/produits/{id}', [ProduitController::class, 'destroy'])->name('pages.produits.destroy');
+Route::put('/produits/{produit}', [ProduitController::class, 'update'])->name('pages.produits.update');
+Route::delete('/produits/{produit}', [ProduitController::class, 'destroy'])->name('pages.produits.destroy');
 
 // Categories
 Route::get('/categories', [CategorieController::class, 'index'])->name('pages.categories.index');

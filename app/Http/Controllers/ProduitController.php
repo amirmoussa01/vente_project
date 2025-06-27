@@ -11,19 +11,16 @@ class ProduitController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Produit::query();
+        $query = Produit::with('categorie'); // Eager loading
 
-        // Filtrer par nom (recherche globale)
         if ($request->filled('search')) {
             $query->where('nom', 'like', '%' . $request->search . '%');
         }
 
-        // Filtrer par catégorie
         if ($request->filled('categorie_id')) {
             $query->where('categorie_id', $request->categorie_id);
         }
 
-        // Tri
         if ($request->filled('tri')) {
             if ($request->tri == 'prix_asc') {
                 $query->orderBy('prix', 'asc');
@@ -92,20 +89,18 @@ class ProduitController extends Controller
             'categorie_id' => 'required|exists:categories,id'
         ]);
 
-        $data = [
-            'nom' => $request->nom,
-            'description' => $request->description,
-            'prix' => $request->prix,
-            'stock' => $request->stock,
-            'categorie_id' => $request->categorie_id,
-        ];
+        $produit->nom = $request->nom;
+        $produit->description = $request->description;
+        $produit->prix = $request->prix;
+        $produit->stock = $request->stock;
+        $produit->categorie_id = $request->categorie_id;
 
         if ($request->hasFile('image')) {
             $path = $request->file('image')->store('produits', 'public');
-            $data['image'] = basename($path);
+            $produit->image = basename($path);
         }
 
-        $produit->update($data);
+        $produit->save();
 
         return redirect()->route('pages.produits.index')->with('success', 'Produit modifié.');
     }
