@@ -13,31 +13,36 @@ class ProduitController extends Controller
     {
         $query = Produit::query();
 
-        // Filtrage par catégorie
+        // Filtrer par nom (recherche globale)
+        if ($request->filled('search')) {
+            $query->where('nom', 'like', '%' . $request->search . '%');
+        }
+
+        // Filtrer par catégorie
         if ($request->filled('categorie_id')) {
             $query->where('categorie_id', $request->categorie_id);
         }
 
-        // Recherche par nom
-        if ($request->filled('q')) {
-            $query->where('nom', 'like', '%' . $request->q . '%');
-        }
-
-        // Tri par prix
-        if ($request->filled('sort') && in_array($request->sort, ['asc', 'desc'])) {
-            $query->orderBy('prix', $request->sort);
+        // Tri
+        if ($request->filled('tri')) {
+            if ($request->tri == 'prix_asc') {
+                $query->orderBy('prix', 'asc');
+            } elseif ($request->tri == 'prix_desc') {
+                $query->orderBy('prix', 'desc');
+            }
         }
 
         $produits = $query->paginate(10);
         $categories = Categorie::all();
 
-        return view('produits.index', compact('produits', 'categories'));
+        return view('pages.produits.index', compact('produits', 'categories'));
     }
+
 
     public function create()
     {
         $categories = Categorie::all();
-        return view('produits.create', compact('categories'));
+        return view('pages.produits.create', compact('categories'));
     }
 
     public function store(Request $request)
@@ -67,18 +72,16 @@ class ProduitController extends Controller
             'categorie_id' => $request->categorie_id
         ]);
 
-        return redirect()->route('produits.index')->with('success', 'Produit ajouté.');
+        return redirect()->route('pages.produits.index')->with('success', 'Produit ajouté.');
     }
 
     public function edit(Produit $produit)
     {
         $categories = Categorie::all();
-        return view('produits.edit', compact('produit', 'categories'));
+        return view('pages.produits.edit', compact('produit', 'categories'));
     }
 
-    public function update(Request $request, Produit 
-
-$produit)
+    public function update(Request $request, Produit $produit)
     {
         $request->validate([
             'nom' => 'required|string|max:255',
@@ -89,32 +92,32 @@ $produit)
             'categorie_id' => 'required|exists:categories,id'
         ]);
 
-        if ($request->hasFile('image')) {
-            $Path = $request->file('image')->store('produits', 'public');
-            $imagePath=basename($Path);
-            $produit->image = $imagePath;
-        }
-
-        $produit->update([
+        $data = [
             'nom' => $request->nom,
             'description' => $request->description,
             'prix' => $request->prix,
             'stock' => $request->stock,
             'categorie_id' => $request->categorie_id,
-            'image' => $produit->image
-        ]);
+        ];
 
-        return redirect()->route('produits.index')->with('success', 'Produit modifié.');
+        if ($request->hasFile('image')) {
+            $path = $request->file('image')->store('produits', 'public');
+            $data['image'] = basename($path);
+        }
+
+        $produit->update($data);
+
+        return redirect()->route('pages.produits.index')->with('success', 'Produit modifié.');
     }
 
     public function destroy(Produit $produit)
     {
         $produit->delete();
-        return redirect()->route('produits.index')->with('success', 'Produit supprimé.');
+        return redirect()->route('pages.produits.index')->with('success', 'Produit supprimé.');
     }
 
     public function show(Produit $produit)
     {
-        return view('produits.show', compact('produit'));
+        return view('pages.produits.show', compact('produit'));
     }
 }

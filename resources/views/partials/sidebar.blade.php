@@ -28,7 +28,7 @@
               <div class="collapse" id="forms">
                 <ul class="nav flex-column sub-menu">
                   <li class="nav-item">
-                    <a class="nav-link" href="pages/forms/basic_elements.html">Tous nos produits</a>
+                    <a class="nav-link" href="{{ route('pages.produits.index')}}">Tous nos produits</a>
                   </li>
                 </ul>
               </div>
