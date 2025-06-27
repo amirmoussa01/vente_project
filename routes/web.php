@@ -31,6 +31,16 @@ Route::middleware('auth')->group(function () {
 
 require __DIR__.'/auth.php';
 
+
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/panier', [PanierController::class, 'index'])->name('panier.index');
+    Route::post('/panier/ajouter/{id}', [PanierController::class, 'ajouter'])->name('panier.ajouter');
+    Route::post('/panier/modifier/{id}', [PanierController::class, 'modifier'])->name('panier.modifier');
+    Route::post('/panier/supprimer/{id}', [PanierController::class, 'supprimer'])->name('panier.supprimer');
+    Route::post('/panier/vider', [PanierController::class, 'vider'])->name('panier.vider');
+});
+
 // Route::get('/admin/login', [AdminController::class, 'loginForm'])->name('admin.login');
 // Route::post('/admin/login', [AdminController::class, 'login']);
 // Route::get('/admin/logout', [AdminController::class, 'logout'])->name('admin.logout');

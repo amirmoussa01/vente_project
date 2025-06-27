@@ -23,6 +23,13 @@ class Produit extends Model
     {
         return $this->belongsTo(Categorie::class);
     }
+
+
+    public function paniers()
+    {
+        return $this->belongsToMany(Panier::class, 'produits_panier')->withPivot('quantite')->withTimestamps();
+    }
+
     
       public function commandes()
     {
