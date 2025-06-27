@@ -13,10 +13,10 @@
         @csrf
     </form>
 
-    <form method="post" action="{{ route('profile.update') }}" class="mt-6 space-y-6">
+    <form method="post" action="{{ route('profile.update') }}" class="mt-6 space-y-6" enctype="multipart/form-data">
         @csrf
         @method('patch')
-
+        <div><img src="{{ asset('storage/'.$user->photo) }}" width="60" height="60" class="rounded"></div>
         <div>
             <x-input-label for="name" :value="__('Name')" />
             <x-purple-input id="name" name="name" type="text" class="mt-1 block w-full" :value="old('name', $user->name)" required autofocus autocomplete="name" />
