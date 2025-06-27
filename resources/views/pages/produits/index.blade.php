@@ -19,7 +19,7 @@
                                     {{ $categorie->nom }}
                                 </option>
                             @endforeach
-                        </select>
+                        </select><br>
                         <label for="tri">Trier par</label>
                         <select class="form-control" name="tri">
                             <option value="">-- Sélectionner --</option>
