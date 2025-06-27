@@ -11,13 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('paniers', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('user_id')->constrained('users');
-            $table->foreignId('produit_id')->constrained('produits');
-            $table->dateTime('date_creation');
-            $table->timestamps();
-        });
+       Schema::create('paniers', function (Blueprint $table) {
+        $table->id();
+        $table->foreignId('user_id')->constrained('users');
+        $table->dateTime('date_creation')->useCurrent();
+        $table->timestamps();
+    });
     }
 
     /**
