@@ -1,4 +1,4 @@
-@extends('layout')
+@extends('layout.bootstrap')
 
 @section('title', 'Commande validée')
 
