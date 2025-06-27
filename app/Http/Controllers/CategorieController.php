@@ -10,12 +10,12 @@ class CategorieController extends Controller
     public function index()
     {
         $categories = Categorie::all();
-        return view('categories.index', compact('categories'));
+        return view('pages.categories.index', compact('categories'));
     }
 
     public function create()
     {
-        return view('categories.create');
+        return view('pages.categories.create');
     }
 
     public function store(Request $request)
@@ -23,7 +23,7 @@ class CategorieController extends Controller
 
         $request->validate([
             'nom' => 'required|string|max:255',
-            'description' => 'nullable|text'
+            'description' => 'nullable'
         ]);
 
         Categorie::create([
@@ -31,32 +31,32 @@ class CategorieController extends Controller
             'description' => $request->description
         ]);
 
-        return redirect()->route('categories.index')->with('success', 'Catégorie ajoutée avec succès.');
+        return redirect()->route('pages.categories.index')->with('success', 'Catégorie ajoutée avec succès.');
     }
 
-    public function edit(Categorie $categorie)
+    public function edit(Categorie $categories)
     {
-        return view('categories.edit', compact('categorie'));
+        return view('pages.categories.edit', compact('categorie'));
     }
 
-    public function update(Request $request, Categorie $categorie)
+    public function update(Request $request, Categorie $categories)
     {
         $request->validate([
             'nom' => 'required|string|max:255',
-            'description' => 'nullable|text'
+            'description' => 'nullable'
         ]);
 
-        $categorie->update([
+        $categories->update([
             'nom' => $request->nom,
             'description' => $request->description
         ]);
 
-        return redirect()->route('categories.index')->with('success', 'Catégorie modifiée avec succès.');
+        return redirect()->route('pages.categories.index')->with('success', 'Catégorie modifiée avec succès.');
     }
 
-    public function destroy(Categorie $categorie)
+    public function destroy(Categorie $categories)
     {
-        $categorie->delete();
-        return redirect()->route('categories.index')->with('success', 'Catégorie supprimée.');
+        $categories->delete();
+        return redirect()->route('pages.categories.index')->with('success', 'Catégorie supprimée.');
     }
 }

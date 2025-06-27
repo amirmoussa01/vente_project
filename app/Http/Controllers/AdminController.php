@@ -20,12 +20,12 @@ class AdminController extends Controller
     {
         $request->validate([
             'username' => 'required',
-            'password' => 'required'
+            'mdp' => 'required'
         ]);
 
         $admin = Admin::where('username', $request->username)->first();
 
-        if ($admin && Hash::check($request->password, $admin->password)) {
+        if ($admin && Hash::check($request->mdp, $admin->mdp)) {
             session(['admin_id' => $admin->id]);
             return redirect()->route('admin.dashboard');
         }
@@ -67,12 +67,12 @@ class AdminController extends Controller
 
         $request->validate([
             'username' => 'required|unique:admins',
-            'password' => 'required|min:4|confirmed',
+            'mdp' => 'required|min:4|confirmed',
         ]);
 
         Admin::create([
             'username' => $request->username,
-            'password' => Hash::make($request->password),
+            'mdp' => Hash::make($request->mdp),
         ]);
 
         return redirect()->route('admins.index')->with('success', 'Admin ajouté.');
@@ -91,13 +91,13 @@ class AdminController extends Controller
 
         $request->validate([
             'username' => 'required|unique:admins,username,' . $admin->id,
-            'password' => 'nullable|min:4|confirmed',
+            'mdp' => 'nullable|min:4|confirmed',
         ]);
 
         $admin->username = $request->username;
 
-        if ($request->filled('password')) {
-            $admin->password = Hash::make($request->password);
+        if ($request->filled('mdp')) {
+            $admin->mdp = Hash::make($request->mdp);
         }
 
         $admin->save();
