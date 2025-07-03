@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Categorie;
+use App\Models\Produit;
 use Illuminate\Http\Request;
+use App\Http\Controllers\ProduitController;
 
 class CategorieController extends Controller
 {
@@ -34,29 +36,37 @@ class CategorieController extends Controller
         return redirect()->route('pages.categories.index')->with('success', 'Catégorie ajoutée avec succès.');
     }
 
-    public function edit(Categorie $categories)
+    public function edit($id)
     {
+        $categorie = Categorie::find($id);
         return view('pages.categories.edit', compact('categorie'));
     }
 
-    public function update(Request $request, Categorie $categories)
-    {
+    public function update(Request $request, $id)
+    {   
+        $categorie= Categorie::find($id);
         $request->validate([
             'nom' => 'required|string|max:255',
-            'description' => 'nullable'
+            'description' => 'nullable|string',
         ]);
 
-        $categories->update([
-            'nom' => $request->nom,
-            'description' => $request->description
-        ]);
+        $categorie->nom = $request->input('nom');
+        $categorie->description = $request->input('description');
+        $categorie->save();
 
-        return redirect()->route('pages.categories.index')->with('success', 'Catégorie modifiée avec succès.');
+        return redirect()->route('pages.categories.index')->with('success', 'Catégorie mise à jour.');
     }
 
-    public function destroy(Categorie $categories)
+    public function destroy($id)
     {
-        $categories->delete();
-        return redirect()->route('pages.categories.index')->with('success', 'Catégorie supprimée.');
+        $categorie= Categorie::find($id);
+        $produits = Produit::where('categorie_id', $id)->count();
+        if($produits >0){
+           return redirect()->route('pages.categories.index')->with('error', 'Impossible de supprimer cette categorie car des produits y son associés !!');
+        }else{
+            $categorie->delete();
+            return redirect()->route('pages.categories.index')->with('success', 'Catégorie supprimée.');
+        }
+        
     }
 }

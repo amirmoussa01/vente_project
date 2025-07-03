@@ -36,7 +36,7 @@ return [
     ],
 
     'fedapay' => [
-    'public_key' => env('FEDAPAY_PUBLIC_KEY'),
+    'public_key' => env('FEDAPAY_PUBLIC_KEY','pk_sandbox__wVCaJRzzY-rnSVo4LmcZDxg'),
     'secret_key' => env('FEDAPAY_SECRET_KEY'),
     'environment' => env('FEDAPAY_ENVIRONMENT', 'sandbox'),
     ],

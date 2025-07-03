@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Produit extends Model
 {
@@ -24,16 +25,15 @@ class Produit extends Model
         return $this->belongsTo(Categorie::class);
     }
 
-    public function paniers()
+        public function produitsPaniers(): HasMany
     {
-        return $this->belongsToMany(Panier::class, 'produits_panier')->withPivot('quantite')->withTimestamps();
+        return $this->hasMany(ProduitPanier::class);
     }
-    
-      public function commandes()
+
+    public function produitsCommandes(): HasMany
     {
-        return $this->belongsToMany(Commande::class, 'produits_commande')
-                    ->withPivot('quantite')
-                    ->withTimestamps();
+        return $this->hasMany(ProduitCommande::class);
     }
+
 
 }

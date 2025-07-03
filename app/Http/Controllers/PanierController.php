@@ -1,80 +1,94 @@
 <?php
-
 namespace App\Http\Controllers;
 
-use App\Models\Panier;
-use App\Models\Produit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Panier;
+use App\Models\ProduitPanier;
+use App\Models\Produit;
 
 class PanierController extends Controller
 {
-    // Voir panier
     public function index()
     {
-        $panier = Panier::where('user_id', Auth::id())->latest()->first();
-        return view('panier.index', compact('panier'));
+        $paniers = Panier::with('produits')->get();
+        return view('pages.paniers.index', compact('paniers'));
     }
 
-    // Ajouter produit
-    public function ajouter(Request $request, $produit_id)
+    public function mespaniers()
     {
-        $user = Auth::user();
-        $produit = Produit::findOrFail($produit_id);
+        $userId = auth()->user()->id;
+        $panier = Panier::where('user_id', $userId)->first();
+        if (!$panier) {
+            return redirect()->back()->with('error', 'Vous n\'avez pas de panier');
+        }
+        $produitsPanier = ProduitPanier::where('panier_id', $panier->id)->get();
+        return view('pages.paniers.index', compact('panier'));
+    }
 
-        // Créer panier si inexistant
-        $panier = Panier::firstOrCreate(
-            ['user_id' => $user->id],
-            ['date_creation' => now()]
-        );
-
-        // Ajouter ou mettre à jour le produit dans le panier
-        $existing = $panier->produits()->where('produit_id', $produit_id)->first();
-
-        if ($existing) {
-            $panier->produits()->updateExistingPivot($produit_id, [
-                'quantite' => $existing->pivot->quantite + 1
-            ]);
-        } else {
-            $panier->produits()->attach($produit_id, ['quantite' => 1]);
+    public function ajouterProduit(Request $request)
+    {
+        $produit = Produit::find($request->input('produit_id'));
+        if ($produit->stock < $request->input('quantite')) {
+            return redirect()->back()->with('error', 'Le produit n\'est pas disponible en stock');
         }
 
-        return redirect()->back()->with('success', 'Produit ajouté au panier');
-    }
-
-    // Modifier quantité
-    public function modifier(Request $request, $produit_id)
-    {
+        $userId = auth()->user()->id;
         $quantite = $request->input('quantite');
-
-        $panier = Panier::where('user_id', Auth::id())->latest()->first();
-
-        if ($panier) {
-            $panier->produits()->updateExistingPivot($produit_id, ['quantite' => $quantite]);
+        $panier = Panier::where('user_id', $userId)->first();
+        if (!$panier) {
+            $panier = new Panier();
+            $panier->user_id = $userId;
+            $panier->quantite = $quantite;
+            $panier->save();
         }
 
-        return redirect()->back()->with('success', 'Quantité mise à jour.');
+        $produitPanier = ProduitPanier::where('panier_id', $panier->id)
+            ->where('produit_id', $produit->id)
+            ->first();
+
+        if ($produitPanier) {
+            $produitPanier->quantite += $request->input('quantite');
+            $produitPanier->save();
+        } else {
+            $produitPanier = new ProduitPanier();
+            $produitPanier->panier_id = $panier->id;
+            $produitPanier->produit_id = $produit->id;
+
+            $produitPanier->quantite = $request->input('quantite');
+            $produitPanier->save();
+        }
+
+        return redirect()->route('pages.paniers.index')->with('success', 'Le produit a été ajouté au panier');
     }
 
-    // Supprimer un produit
-    public function supprimer($produit_id)
+    public function updateProduitPanier(Request $request, $id)
     {
-        $panier = Panier::where('user_id', Auth::id())->latest()->first();
-        if ($panier) {
-            $panier->produits()->detach($produit_id);
+        $produitPanier = ProduitPanier::find($id);
+        $produit = Produit::find($produitPanier->produit_id);
+        if ($produit->stock < $request->input('quantite')) {
+            return redirect()->back()->with('error', 'Le produit n\'est pas disponible en stock');
         }
 
-        return redirect()->back()->with('success', 'Produit supprimé.');
+        $produitPanier->quantite = $request->input('quantite');
+        $produitPanier->save();
+
+        return redirect()->route('pages.paniers.index')->with('success', 'La quantité du produit a été mise à jour');
     }
 
-    // Vider le panier
-    public function vider()
+    public function supprimerProduit($id)
     {
-        $panier = Panier::where('user_id', Auth::id())->latest()->first();
-        if ($panier) {
-            $panier->produits()->detach();
-        }
+        $produitPanier = ProduitPanier::find($id);
+        $produitPanier->delete();
+        return redirect()->route('pages.paniers.index')->with('success', 'Le produit a été supprimé du panier');
+    }
 
-        return redirect()->back()->with('success', 'Panier vidé.');
+    public function viderPanier($id)
+    {
+        $produitsPanier = ProduitPanier::where('panier_id', $id)->get();
+        foreach ($produitsPanier as $produitPanier) {
+            $produitPanier->delete();
+        }
+        return redirect()->route('pages.paniers.index')->with('success', 'Le panier a été vidé');
     }
 }

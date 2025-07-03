@@ -5,22 +5,21 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class ProduitCommande extends Model
+class Paiement extends Model
 {
-    protected $table = 'produits_commande';
     protected $fillable = [
         'commande_id',
-        'produit_id',
-        'quantite',
+        'montant',
+        'statut',
+        'date_paiement',
+        'transaction_id',
+    ];
+    protected $casts = [
+        'date_paiement' => 'datetime',
     ];
 
     public function commande(): BelongsTo
     {
         return $this->belongsTo(Commande::class);
-    }
-
-    public function produit(): BelongsTo
-    {
-        return $this->belongsTo(Produit::class);
     }
 }

@@ -21,6 +21,31 @@
     <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
     <!-- End layout styles -->
     <link rel="shortcut icon" href="{{ asset('assets/images/favicon.png') }}" />
+    <!-- Bootstrap JS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+<meta name="csrf-token" content="{{ csrf_token() }}">
+    <!-- style -->
+    <style>
+      .btn-purple {
+        background-color: #c8a2c8;
+        color: white;
+      }
+      .btn-purple:hover {
+        background-color: #b48bb4;
+      }
+      .card-purple {
+        border: 1px solid #d6b3d6;
+        background-color: #f8f1f8;
+      }
+      .text-purple {
+        color: #a05aa0;
+      }
+      .badge-purple {
+        background-color: #6f42c1;
+        color: #ffffff;
+      }
+    </style>
+
 </head>
 <body>
 <div class="container-scroller">

@@ -5,6 +5,10 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProduitController;
 use App\Http\Controllers\CategorieController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\PanierController;
+use App\Http\Controllers\CommandeController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\PaiementController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -19,32 +23,39 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     
-    Route::post('/commandes', [CommandeController::class, 'store'])->name('commandes.store');
-    Route::get('/commandes', [CommandeController::class, 'index'])->name('commandes.index');
-    Route::get('/commandes/create', [CommandeController::class, 'create'])->name('commandes.create');
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
-    Route::get('/commandes/success/{commande}', [CommandeController::class, 'success'])->name('commandes.success');
+    // Routes pour les paniers
+    Route::get('/panier', [PanierController::class, 'mespaniers'])->name('pages.paniers.index');
+    Route::post('/paniers/ajouter-produit', [PanierController::class, 'ajouterProduit'])->name('pages.paniers.store');;
+    Route::put('/paniers/update-produit-panier/{id}', [PanierController::class, 'updateProduitPanier'])->name('pages.paniers.update');;
+    Route::delete('/paniers/supprimer-produit/{id}', [PanierController::class, 'supprimerProduit'])->name('pages.paniers.destroy');;
+    Route::delete('/paniers/vider-panier/{id}', [PanierController::class, 'viderPanier'])->name('pages.paniers.delete');;
 
-    Route::get('/commandes/{commande}/edit', [CommandeController::class, 'edit'])->name('commandes.edit');
-    Route::put('/commandes/{commande}', [CommandeController::class, 'update'])->name('commandes.update');
+    // Routes pour les commandes
+    Route::get('/mes-commandes', [CommandeController::class, 'mescommandes'])->name('pages.commandes.index');
+    Route::post('/commandes', [CommandeController::class, 'store'])->name('pages.commandes.store');
+    Route::post('/commandes/annuler-commande/{id}', [CommandeController::class, 'annulerCommande'])->name('pages.commandes.delete');
+
+    Route::get('/mes-paiements', [PaiementController::class, 'index'])->name('paiements.index');
+    Route::post('/paiement', [PaiementController::class, 'store'])->name('paiements.store');
+    Route::get('/recu/{id}', [PaiementController::class, 'telechargerRecu'])->name('paiements.recu');
 });
 
 require __DIR__.'/auth.php';
 
+    Route::get('/paniers', [PanierController::class, 'index']);
+
+    Route::get('/commandes', [CommandeController::class, 'index']);
 
 
-Route::middleware(['auth'])->group(function () {
-    Route::get('/panier', [PanierController::class, 'index'])->name('panier.index');
-    Route::post('/panier/ajouter/{id}', [PanierController::class, 'ajouter'])->name('panier.ajouter');
-    Route::post('/panier/modifier/{id}', [PanierController::class, 'modifier'])->name('panier.modifier');
-    Route::post('/panier/supprimer/{id}', [PanierController::class, 'supprimer'])->name('panier.supprimer');
-    Route::post('/panier/vider', [PanierController::class, 'vider'])->name('panier.vider');
-});
-// Route::get('/admin/login', [AdminController::class, 'loginForm'])->name('admin.login');
-// Route::post('/admin/login', [AdminController::class, 'login']);
-// Route::get('/admin/logout', [AdminController::class, 'logout'])->name('admin.logout');
 
-// Routes admin
+
+
+
+    Route::get('/admin/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
+    Route::get('/admin/produits', [AdminController::class, 'produits'])->name('admin.produits');
+
 
 Route::resource('categories', CategorieController::class);
 Route::get('/creer', function () {
@@ -64,7 +75,7 @@ Route::get('/categories', [CategorieController::class, 'index'])->name('pages.ca
 Route::get('/categories/create', [CategorieController::class, 'create'])->name('pages.categories.create');
 Route::post('/categories', [CategorieController::class, 'store'])->name('pages.categories.store');
 Route::get('/categories/{id}', [CategorieController::class, 'show'])->name('pages.categories.show');
-Route::get('/categories/{categorie}/edit', [CategorieController::class, 'edit'])->name('pages.categories.edit');
+Route::get('/categories/{id}/edit', [CategorieController::class, 'edit'])->name('pages.categories.edit');
 Route::put('/categories/{id}', [CategorieController::class, 'update'])->name('pages.categories.update');
 Route::delete('/categories/{id}', [CategorieController::class, 'destroy'])->name('pages.categories.destroy');
 

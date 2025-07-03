@@ -15,7 +15,7 @@
               </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="index.html">
+              <a class="nav-link" href="{{ route('dashboard')}}">
                 <span class="menu-title">Dashboard</span>
                 <i class="mdi mdi-home menu-icon"></i>
               </a>
@@ -41,14 +41,7 @@
               <div class="collapse" id="charts">
                 <ul class="nav flex-column sub-menu">
                   <li class="nav-item">
-                    <a class="nav-link" href="#">Ajouter un panier</a>
-                  </li>
-                </ul>
-              </div>
-              <div class="collapse" id="charts">
-                <ul class="nav flex-column sub-menu">
-                  <li class="nav-item">
-                    <a class="nav-link" href="#">Tous mes paniers</a>
+                    <a class="nav-link" href="{{ route('pages.paniers.index')}}">Voir mon panier</a>
                   </li>
                 </ul>
               </div>
@@ -61,14 +54,7 @@
               <div class="collapse" id="tables">
                 <ul class="nav flex-column sub-menu">
                   <li class="nav-item">
-                    <a class="nav-link" href="#">Passer une commande</a>
-                  </li>
-                </ul>
-              </div>
-              <div class="collapse" id="tables">
-                <ul class="nav flex-column sub-menu">
-                  <li class="nav-item">
-                    <a class="nav-link" href="#">Toutes mes commandes</a>
+                    <a class="nav-link" href="{{ route('pages.commandes.index')}}">Toutes mes commandes</a>
                   </li>
                 </ul>
               </div>
@@ -81,14 +67,7 @@
               <div class="collapse" id="tables">
                 <ul class="nav flex-column sub-menu">
                   <li class="nav-item">
-                    <a class="nav-link" href="#">Faire un paiement</a>
-                  </li>
-                </ul>
-              </div>
-              <div class="collapse" id="tables">
-                <ul class="nav flex-column sub-menu">
-                  <li class="nav-item">
-                    <a class="nav-link" href="#">Tous mes paiement</a>
+                    <a class="nav-link" href="{{ route('paiements.index')}}">Tous mes paiement</a>
                   </li>
                 </ul>
               </div>

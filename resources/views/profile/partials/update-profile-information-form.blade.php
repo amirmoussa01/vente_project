@@ -16,7 +16,7 @@
     <form method="post" action="{{ route('profile.update') }}" class="mt-6 space-y-6" enctype="multipart/form-data">
         @csrf
         @method('patch')
-        <div><img src="{{ asset('storage/'.$user->photo) }}" width="60" height="60" class="rounded"></div>
+        <div><img src="{{ asset('storage/uploads/'.$user->photo) }}"  class=" mx-auto d-block w-20" style="height: 150px;width: 150px;border-radius:50%; object-fit:cover;"></div>
         <div>
             <x-input-label for="name" :value="__('Name')" />
             <x-purple-input id="name" name="name" type="text" class="mt-1 block w-full" :value="old('name', $user->name)" required autofocus autocomplete="name" />
@@ -63,7 +63,7 @@
         </div>
 
         <div class="flex items-center gap-4">
-            <x-purple-button>{{ __('Save') }}</x-purple-button>
+            <x-primary-button>{{ __('Save') }}</x-primary-button>
 
             @if (session('status') === 'profile-updated')
                 <p

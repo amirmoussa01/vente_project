@@ -1,8 +1,9 @@
 <?php
 
 namespace App\Models;
-
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Panier extends Model
 {
@@ -13,8 +14,9 @@ class Panier extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function produits()
+       public function produits(): HasMany
     {
-        return $this->belongsToMany(Produit::class, 'produits_panier')->withPivot('quantite')->withTimestamps();
+        return $this->hasMany(ProduitPanier::class);
     }
+
 }
